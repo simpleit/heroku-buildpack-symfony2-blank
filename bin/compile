@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+
+###################################################################
+#                    Empty Symfony Heroku Buildpack               #
+#                                                                 #
+#        Author: Sylvain Mauduit <sylvain.mauduit@simple-it.fr>   #
+#                                                                 #
+###################################################################
+
+# bin/compile <build-dir> <cache-dir>
+
+# ----Local folders----
+BUILD_DIR=$1
+CACHE_DIR=$2
+BIN_DIR=$(dirname $0)
+LP_DIR=`cd $(dirname $0); cd ..; pwd`
+
+
+# ----FUNCTIONS---------------------------------------------------------
+
+function indent() {
+  c='s/^/       /'
+  case $(uname) in
+    Darwin) sed -l "$c";;
+    *)      sed -u "$c";;
+  esac
+}
+
+function strip_slashes() {
+  echo $(echo "$1" | sed -e "s/\//\\\\\//g")
+}
+
+mktmpdir() {
+  dir=$(mktemp -t $1-XXXX)
+  rm -rf $dir
+  mkdir -p $dir
+  echo $dir
+}
+
+# ----PRE-INSTALL ACTIONS-----------------------------------------------
+
+echo "-----> Empty Symfony Heroku Buildpack: Slug compilation start"
+
+# fail fast
+set -e
+set -o pipefail
+
+mkdir -p $BUILD_DIR $CACHE_DIR
+
+cd $BUILD_DIR
+
+echo "-----> Slug compilation ends with success!"
